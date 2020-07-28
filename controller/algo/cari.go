@@ -72,7 +72,7 @@ func (a Algo) GetAccurateData() *mongo.Cursor {
 	return cr
 }
 
-func (a Algo) AccurateSearch(title string, payload string, ulasan int, terjual int, rating int, key []string) int {
+func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjual uint32, rating uint16, key []string) int {
 
 	tmpArr := strings.Split(payload, " ")
 
@@ -91,22 +91,22 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan int, terjual i
 	nilaiJudul := 0
 	nilaiKeyword := 0
 
-	persenRating := (rating / 5) * 20
+	persenRating := int((rating / 5) * 20)
 
-	persenTerjual := 0
+	var persenTerjual int
 
 	if terjual >= 100 {
-		persenTerjual = 8
+		persenTerjual = int(8)
 	} else {
-		persenTerjual = (terjual / 100) * 8
+		persenTerjual = int((terjual / 100) * 8)
 	}
 
-	persenUlasan := 0
+	var persenUlasan int
 
 	if terjual >= 100 {
-		persenUlasan = 7
+		persenUlasan = int(7)
 	} else {
-		persenUlasan = (terjual / 100) * 7
+		persenUlasan = int((ulasan / 100) * 7)
 	}
 
 	for i < leng {
@@ -115,7 +115,7 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan int, terjual i
 		}
 	}
 
-	persenJudul := (nilaiJudul / leng) * 50
+	persenJudul := int((nilaiJudul / leng) * 50)
 
 	for j < lengKey {
 		if strings.Contains(payload, key[j]) {
@@ -123,7 +123,7 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan int, terjual i
 		}
 	}
 
-	persenKey := (nilaiKeyword / lengKey) * 15
+	persenKey := int((nilaiKeyword / lengKey) * 15)
 
 	total := persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
 
@@ -157,7 +157,7 @@ func (a Algo) LoopSearch(title string) []data.DataFilter {
 	var objFilter data.DataFilter
 
 	for _, e := range arr {
-		nilai := a.AccurateSearch(title, e.Nama)
+		nilai := a.AccurateSearch(title, e.Nama, e.TotalUlasan, e.TotalTerjual, e.Rating, e.Keyword)
 		if nilai >= 50 {
 			objFilter = a.MergerFilter(e, nilai)
 			arrFilter = append(arrFilter, objFilter)

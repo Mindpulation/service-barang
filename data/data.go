@@ -24,10 +24,10 @@ type DataBarang struct {
 	KodeBarcode  string
 	Nama         string
 	Deskripsi    string
-	TotalUlasan  uint64
-	TotalTerjual uint64
+	TotalUlasan  uint32
+	TotalTerjual uint32
 	Keyword      []string
-	Rating       uint64
+	Rating       uint16
 	Price        uint64
 	Stok         uint32
 	Ulasan       []DataUlasan
@@ -39,10 +39,10 @@ type DataFilter struct {
 	KodeBarcode  string
 	Nama         string
 	Deskripsi    string
-	TotalUlasan  uint64
-	TotalTerjual uint64
+	TotalUlasan  uint32
+	TotalTerjual uint32
 	Keyword      []string
-	Rating       uint64
+	Rating       uint16
 	Price        uint64
 	Stok         uint32
 	Ulasan       []DataUlasan
