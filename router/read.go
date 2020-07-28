@@ -26,17 +26,19 @@ func (r Router) GetBarang(c *fiber.Ctx) {
 }
 
 func (r Router) CariBarang(c *fiber.Ctx) {
-	//con, col, _ := m.MakeConnection()
+
 	cari := c.Params("cari")
 
 	res := a.LoopSearch(cari)
 
-	// cr, _ := m.FindSkipAndLimit(col, 5000, 4999)
-	// res := cl.ToArray(cr)
+	// var filterRes []data.DataFilter
 
-	// fmt.Println(len(res))
-
-	// m.Disconnect(con)
+	// for i, e := range res {
+	// 	filterRes = append(filterRes, e)
+	// 	if i == 99 {
+	// 		break
+	// 	}
+	// }
 
 	response, _ := json.Marshal(res)
 	c.Send(response)

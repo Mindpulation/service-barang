@@ -4,16 +4,17 @@ import (
 	"brg/data"
 	"math/rand"
 	"strings"
+	"sync"
 )
 
-func (a Algo) Random(max int64, min int64) int64 {
-	return rand.Int63n(max-min) + min
-}
+func (a Algo) Random(max int64, min int64) int64 { return rand.Int63n(max-min) + min }
 
 func (a Algo) TagCalculate(qty int64) int64 {
 	batasAkhir = qty % max
 	banyakIndex = qty / max
+
 	limitIndex = banyakIndex + 1
+
 	return a.Random(limitIndex, 0) + 1
 }
 
@@ -42,8 +43,6 @@ func (a Algo) SkipLimitProduct() (int64, int64) {
 	cn, cl, _ := m.MakeConnection()
 	qty, _ := m.FindCount(cl)
 
-	//fmt.Println(qty)
-
 	var (
 		skip, limit, akhir int64
 	)
@@ -58,8 +57,6 @@ func (a Algo) SkipLimitProduct() (int64, int64) {
 		limit = akhir
 	}
 
-	//fmt.Println(skip, limit)
-
 	m.Disconnect(cn)
 
 	return skip, limit
@@ -67,72 +64,57 @@ func (a Algo) SkipLimitProduct() (int64, int64) {
 
 func (a Algo) GetAccurateData() []data.DataBarang {
 	skip, lim := a.SkipLimitProduct()
+
 	cn, cl, _ := m.MakeConnection()
 	cr, _ := m.FindSkipAndLimit(cl, skip, lim)
 	arr := c.ToArray(cr)
-
-	//fmt.Println(len(arr))
-
 	m.Disconnect(cn)
 
 	return arr
 }
 
-func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjual uint32, rating uint16, key []string) int {
+func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjual uint32, rating uint16, key []string) float64 {
 
-	tmpArr := strings.Split(payload, " ")
+	litTitle := strings.ToLower(title)
+	litPayload := strings.ToLower(payload)
 
-	leng := len(tmpArr)
+	tmpArr := strings.Split(litPayload, " ")
+	leng := len(tmpArr) // Banyak kata bedasarkan kata pencarian
+	lengKey := len(key) // Banyak kata pada sebuah field Keyword
 	i := 0
-
-	lengKey := len(key)
 	j := 0
 
-	// Judul   => 50%
-	// Rating  => 20%
-	// Keyword => 15%
-	// Terjual => 8%
-	// Ulasan  => 7%
+	var (
+		nilaiJudul, persenRating, persenTerjual, persenUlasan, persenJudul, persenKey, total float64
+		nilaiKeyword                                                                         bool
+	)
 
-	nilaiJudul := 0
-	nilaiKeyword := false
-
-	persenRating := int((rating / 5) * 20)
-
-	var persenTerjual int
+	persenRating = (float64(rating) / 5) * 20
 
 	if terjual >= 100 {
-		persenTerjual = int(8)
+		persenTerjual = float64(8)
+		persenUlasan = float64(7)
 	} else {
-		persenTerjual = int((terjual / 100) * 8)
-	}
-
-	var persenUlasan int
-
-	if terjual >= 100 {
-		persenUlasan = int(7)
-	} else {
-		persenUlasan = int((ulasan / 100) * 7)
+		persenTerjual = (float64(terjual) / 100) * 8
+		persenUlasan = (float64(ulasan) / 100) * 7
 	}
 
 	for i < leng {
-		if strings.Contains(strings.ToLower(title), strings.ToLower(tmpArr[i])) {
+		if strings.Contains(litTitle, tmpArr[i]) {
 			nilaiJudul++
 		}
 		i++
 	}
 
-	persenJudul := int((nilaiJudul / leng) * 50)
+	persenJudul = (nilaiJudul / float64(leng)) * 50
 
 	for j < lengKey {
-		if strings.Contains(strings.ToLower(payload), strings.ToLower(key[j])) {
+		if strings.Contains(litPayload, strings.ToLower(key[j])) {
 			nilaiKeyword = true
 			break
 		}
 		j++
 	}
-
-	var persenKey int
 
 	if persenJudul == 0 {
 
@@ -148,15 +130,11 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjua
 
 	}
 
-	//fmt.Println(persenRating)
-
-	total := persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
-
+	total = persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
 	return total
-
 }
 
-func (a Algo) MergerFilter(e data.DataBarang, filter int) data.DataFilter {
+func (a Algo) MergerFilter(e data.DataBarang, filter float64) data.DataFilter {
 	var res data.DataFilter
 	res.Id = e.Id
 	res.IdToko = e.IdToko
@@ -174,21 +152,90 @@ func (a Algo) MergerFilter(e data.DataBarang, filter int) data.DataFilter {
 	return res
 }
 
-func (a Algo) LoopSearch(title string) []data.DataFilter {
-	arr := a.GetAccurateData()
+func (a Algo) CalculateIndex(leng int) (int, int, int) {
+	max := 500
+	countIndex := (leng / max) - 1
+	countLimitIndex := countIndex + 1
+	endData := leng % max
 
-	//fmt.Println(len(arr))
+	return countIndex, countLimitIndex, endData
+}
 
-	var arrFilter []data.DataFilter
+func (a Algo) RangeIndex(index int, limit int, endData int) (int, int) {
+	var (
+		start, end int
+	)
+	start = index * 500
+	if index == limit {
+		end = start + endData
+	} else {
+		end = start + 500
+	}
+	return start, end
+}
+
+func (a Algo) PartOfSearch(payload string, arr []data.DataBarang, aim *[]data.DataFilter, wg *sync.WaitGroup) {
+
 	var objFilter data.DataFilter
+	var arrFilter []data.DataFilter
 
 	for _, e := range arr {
-		nilai := a.AccurateSearch(title, e.Nama, e.TotalUlasan, e.TotalTerjual, e.Rating, e.Keyword)
-		if nilai >= 35 {
+		nilai := a.AccurateSearch(e.Nama, payload, e.TotalUlasan, e.TotalTerjual, e.Rating, e.Keyword)
+		if nilai >= 50 {
 			objFilter = a.MergerFilter(e, nilai)
 			arrFilter = append(arrFilter, objFilter)
 		}
 	}
 
+	*aim = append(*aim, arrFilter...)
+
+	defer wg.Done()
+
+}
+
+func (a Algo) LoopSearch(payload string) []data.DataFilter {
+
+	var (
+		arrFilter []data.DataFilter
+		objFilter data.DataFilter
+		wg        sync.WaitGroup
+	)
+
+	arr := a.GetAccurateData()
+
+	leng := len(arr)
+
+	if leng < 500 {
+
+		for _, e := range arr {
+			nilai := a.AccurateSearch(e.Nama, payload, e.TotalUlasan, e.TotalTerjual, e.Rating, e.Keyword)
+			if nilai >= 50 {
+				objFilter = a.MergerFilter(e, nilai)
+				arrFilter = append(arrFilter, objFilter)
+			}
+		}
+
+		return arrFilter
+
+	}
+
+	i := 0
+
+	lengIndex, limIndex, endData := a.CalculateIndex(leng)
+
+	for i <= lengIndex+1 {
+
+		start, end := a.RangeIndex(i, limIndex, endData)
+
+		wg.Add(1)
+
+		go a.PartOfSearch(payload, arr[start:end], &arrFilter, &wg)
+
+		wg.Wait()
+
+		i++
+	}
+
 	return arrFilter
+
 }

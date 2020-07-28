@@ -46,5 +46,5 @@ type DataFilter struct {
 	Price        uint64             `json:"price,omitempty" bson:"price, omitempty"`
 	Stok         uint32             `json:"stok,omitempty" bson:"stok, omitempty"`
 	Ulasan       []DataUlasan       `json:"ulasan" bson:"ulasan"`
-	FilterCari   int                `json:"filter" bson:"fitler"`
+	FilterCari   float64            `json:"filter" bson:"fitler"`
 }

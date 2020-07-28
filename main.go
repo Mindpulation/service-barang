@@ -17,7 +17,7 @@ func init() {
 
 func main() {
 
-	runtime.GOMAXPROCS(9)
+	runtime.GOMAXPROCS(4)
 
 	app := fiber.New()
 	app.Get("v1/api/barang/:idBarang", r.GetBarang)
