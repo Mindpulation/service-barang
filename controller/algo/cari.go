@@ -89,7 +89,7 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjua
 	// Ulasan  => 7%
 
 	nilaiJudul := 0
-	nilaiKeyword := 0
+	nilaiKeyword := false
 
 	persenRating := int((rating / 5) * 20)
 
@@ -110,20 +110,37 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjua
 	}
 
 	for i < leng {
-		if strings.Contains(title, tmpArr[i]) {
+		if strings.Contains(strings.ToLower(title), strings.ToLower(tmpArr[i])) {
 			nilaiJudul++
 		}
+		i++
 	}
 
 	persenJudul := int((nilaiJudul / leng) * 50)
 
 	for j < lengKey {
-		if strings.Contains(payload, key[j]) {
-			nilaiKeyword++
+		if strings.Contains(strings.ToLower(payload), strings.ToLower(key[j])) {
+			nilaiKeyword = true
+			break
 		}
+		j++
 	}
 
-	persenKey := int((nilaiKeyword / lengKey) * 15)
+	var persenKey int
+
+	if persenJudul == 0 {
+
+		if nilaiKeyword == true {
+			persenKey = 50
+		}
+
+	} else {
+
+		if nilaiKeyword == true {
+			persenKey = 15
+		}
+
+	}
 
 	total := persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
 
@@ -158,7 +175,7 @@ func (a Algo) LoopSearch(title string) []data.DataFilter {
 
 	for _, e := range arr {
 		nilai := a.AccurateSearch(title, e.Nama, e.TotalUlasan, e.TotalTerjual, e.Rating, e.Keyword)
-		if nilai >= 50 {
+		if nilai >= 35 {
 			objFilter = a.MergerFilter(e, nilai)
 			arrFilter = append(arrFilter, objFilter)
 		}
