@@ -3,6 +3,8 @@ package router
 import (
 	"brg/data"
 	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -27,18 +29,15 @@ func (r Router) GetBarang(c *fiber.Ctx) {
 
 func (r Router) CariBarang(c *fiber.Ctx) {
 
+	start := time.Now().Nanosecond()
+
 	cari := c.Params("cari")
 
 	res := a.LoopSearch(cari)
 
-	// var filterRes []data.DataFilter
+	end := time.Now().Nanosecond() - start
 
-	// for i, e := range res {
-	// 	filterRes = append(filterRes, e)
-	// 	if i == 99 {
-	// 		break
-	// 	}
-	// }
+	fmt.Println(float64(end) / 1000000000)
 
 	response, _ := json.Marshal(res)
 	c.Send(response)
