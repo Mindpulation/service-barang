@@ -72,20 +72,62 @@ func (a Algo) GetAccurateData() *mongo.Cursor {
 	return cr
 }
 
-func (a Algo) AccurateSearch(title string, payload string) int {
+func (a Algo) AccurateSearch(title string, payload string, ulasan int, terjual int, rating int, key []string) int {
+
 	tmpArr := strings.Split(payload, " ")
+
 	leng := len(tmpArr)
 	i := 0
 
-	nilai := 0
+	lengKey := len(key)
+	j := 0
+
+	// Judul   => 50%
+	// Rating  => 20%
+	// Keyword => 15%
+	// Terjual => 8%
+	// Ulasan  => 7%
+
+	nilaiJudul := 0
+	nilaiKeyword := 0
+
+	persenRating := (rating / 5) * 20
+
+	persenTerjual := 0
+
+	if terjual >= 100 {
+		persenTerjual = 8
+	} else {
+		persenTerjual = (terjual / 100) * 8
+	}
+
+	persenUlasan := 0
+
+	if terjual >= 100 {
+		persenUlasan = 7
+	} else {
+		persenUlasan = (terjual / 100) * 7
+	}
 
 	for i < leng {
 		if strings.Contains(title, tmpArr[i]) {
-			nilai++
+			nilaiJudul++
 		}
 	}
 
-	return (nilai / leng) * 100
+	persenJudul := (nilaiJudul / leng) * 50
+
+	for j < lengKey {
+		if strings.Contains(payload, key[j]) {
+			nilaiKeyword++
+		}
+	}
+
+	persenKey := (nilaiKeyword / lengKey) * 15
+
+	total := persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
+
+	return total
 
 }
 
