@@ -2,6 +2,8 @@ package main
 
 import (
 	"brg/router"
+	"runtime"
+
 	"github.com/gofiber/fiber"
 )
 
@@ -14,8 +16,12 @@ func init() {
 }
 
 func main() {
+
+	runtime.GOMAXPROCS(9)
+
 	app := fiber.New()
 	app.Get("v1/api/barang/:idBarang", r.GetBarang)
+	app.Get("v1/api/barang/cari/:cari", r.CariBarang)
 	app.Post("v1/api/barang/insert", r.InsertBarang)
 	app.Put("v1/api/barang/:idBarang", r.UpdateBarang)
 	app.Put("v1/api/barang/stok/:idBarang", r.UpdateStokBarang)

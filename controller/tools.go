@@ -3,15 +3,16 @@ package controller
 import (
 	"brg/data"
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Controller struct {
 }
 
 func (c Controller) ToArray(cr *mongo.Cursor) []data.DataBarang {
-	ct, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ct, _ := context.WithTimeout(context.Background(), 100*time.Second)
 	var arrReturn []data.DataBarang
 	var objectBarang data.DataBarang
 	for cr.Next(ct) {

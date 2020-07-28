@@ -13,7 +13,7 @@ func (m MongoDB) FindAll(col *mongo.Collection) (*mongo.Cursor, error) {
 }
 
 func (m MongoDB) FindSkipAndLimit(col *mongo.Collection, skip int64, limit int64) (*mongo.Cursor, error) {
-	ct := m.MakeContext(5)
+	ct := m.MakeContext(100)
 	option := options.FindOptions{}
 	return col.Find(ct, bson.M{}, option.SetSkip(skip), option.SetLimit(limit))
 }

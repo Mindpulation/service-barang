@@ -4,8 +4,6 @@ import (
 	"brg/data"
 	"math/rand"
 	"strings"
-
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (a Algo) Random(max int64, min int64) int64 {
@@ -44,6 +42,8 @@ func (a Algo) SkipLimitProduct() (int64, int64) {
 	cn, cl, _ := m.MakeConnection()
 	qty, _ := m.FindCount(cl)
 
+	//fmt.Println(qty)
+
 	var (
 		skip, limit, akhir int64
 	)
@@ -58,18 +58,24 @@ func (a Algo) SkipLimitProduct() (int64, int64) {
 		limit = akhir
 	}
 
+	//fmt.Println(skip, limit)
+
 	m.Disconnect(cn)
 
 	return skip, limit
 }
 
-func (a Algo) GetAccurateData() *mongo.Cursor {
+func (a Algo) GetAccurateData() []data.DataBarang {
 	skip, lim := a.SkipLimitProduct()
 	cn, cl, _ := m.MakeConnection()
 	cr, _ := m.FindSkipAndLimit(cl, skip, lim)
+	arr := c.ToArray(cr)
+
+	//fmt.Println(len(arr))
+
 	m.Disconnect(cn)
 
-	return cr
+	return arr
 }
 
 func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjual uint32, rating uint16, key []string) int {
@@ -142,6 +148,8 @@ func (a Algo) AccurateSearch(title string, payload string, ulasan uint32, terjua
 
 	}
 
+	//fmt.Println(persenRating)
+
 	total := persenJudul + persenRating + persenTerjual + persenUlasan + persenKey
 
 	return total
@@ -167,8 +175,9 @@ func (a Algo) MergerFilter(e data.DataBarang, filter int) data.DataFilter {
 }
 
 func (a Algo) LoopSearch(title string) []data.DataFilter {
-	cr := a.GetAccurateData()
-	arr := c.ToArray(cr)
+	arr := a.GetAccurateData()
+
+	//fmt.Println(len(arr))
 
 	var arrFilter []data.DataFilter
 	var objFilter data.DataFilter

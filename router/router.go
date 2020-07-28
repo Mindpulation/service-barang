@@ -2,6 +2,7 @@ package router
 
 import (
 	"brg/controller"
+	"brg/controller/algo"
 	"brg/model"
 )
 
@@ -12,6 +13,8 @@ type ResBool struct {
 	sta bool
 	err error
 }
+
+var a algo.Algo
 
 var bol ResBool
 
