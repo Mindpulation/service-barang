@@ -39,6 +39,6 @@ func (r Router) CariBarang(c *fiber.Ctx) {
 
 	fmt.Println(float64(end) / 1000000)
 
-	response, _ := json.Marshal(res)
+	response, _ := json.Marshal(res[0:25])
 	c.Send(response)
 }
