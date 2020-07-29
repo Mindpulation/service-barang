@@ -37,7 +37,7 @@ func (r Router) CariBarang(c *fiber.Ctx) {
 
 	end := time.Now().Nanosecond() - start
 
-	fmt.Println(float64(end) / 1000000000)
+	fmt.Println(float64(end) / 1000000)
 
 	response, _ := json.Marshal(res)
 	c.Send(response)

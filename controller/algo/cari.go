@@ -189,16 +189,17 @@ func (a Algo) PartOfSearch(payload string, arr []data.DataBarang, aim *[]data.Da
 
 	*aim = append(*aim, arrFilter...)
 
-	defer wg.Done()
+	wg.Done()
 
 }
 
 func (a Algo) LoopSearch(payload string) []data.DataFilter {
 
 	var (
-		arrFilter []data.DataFilter
-		objFilter data.DataFilter
-		wg        sync.WaitGroup
+		arrFilter  []data.DataFilter
+		objFilter  data.DataFilter
+		wg         sync.WaitGroup
+		start, end int
 	)
 
 	arr := a.GetAccurateData()
@@ -224,15 +225,10 @@ func (a Algo) LoopSearch(payload string) []data.DataFilter {
 	lengIndex, limIndex, endData := a.CalculateIndex(leng)
 
 	for i <= lengIndex+1 {
-
-		start, end := a.RangeIndex(i, limIndex, endData)
-
 		wg.Add(1)
-
+		start, end = a.RangeIndex(i, limIndex, endData)
 		go a.PartOfSearch(payload, arr[start:end], &arrFilter, &wg)
-
 		wg.Wait()
-
 		i++
 	}
 
