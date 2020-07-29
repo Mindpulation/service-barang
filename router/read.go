@@ -51,3 +51,14 @@ func (r Router) CariBarang(c *fiber.Ctx) {
 
 	c.Send(response)
 }
+
+func (r Router) GetGoceng(c *fiber.Ctx) {
+	con, col, _ := m.MakeConnection()
+
+	cr, _ := m.FindSkipAndLimit(col, 0, 5000)
+	res := cl.ToArray(cr)
+
+	m.Disconnect(con)
+	response, _ := json.Marshal(res)
+	c.Send(response)
+}
