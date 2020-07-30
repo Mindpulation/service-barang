@@ -225,8 +225,8 @@ func (a Algo) LoopSearch(payload string) []data.DataFilter {
 	lengIndex, limIndex, endData := a.CalculateIndex(leng)
 
 	for i <= lengIndex+1 {
-		wg.Add(1)
 		start, end = a.RangeIndex(i, limIndex, endData)
+		wg.Add(1)
 		go a.PartOfSearch(payload, arr[start:end], &arrFilter, &wg)
 		wg.Wait()
 		i++

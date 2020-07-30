@@ -28,15 +28,19 @@ func (r Router) GetBarang(c *fiber.Ctx) {
 
 func (r Router) CariBarang(c *fiber.Ctx) {
 
-	//start := time.Now().Nanosecond()
+	cari := c.Params("cari")
 
-	//cari := c.Params("cari")
+	res := a.CariBarang(cari)
 
-	//end := time.Now().Nanosecond() - start
+	var response []byte
 
-	//fmt.Println(float64(end) / 1000000)
+	if res == nil {
+		response, _ = json.Marshal(res)
+	} else {
+		response, _ = json.Marshal(res[0:25])
+	}
 
-	//c.Send(response)
+	c.Send(response)
 }
 
 func (r Router) GetGoceng(c *fiber.Ctx) {
