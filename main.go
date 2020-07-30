@@ -20,6 +20,7 @@ func main() {
 	runtime.GOMAXPROCS(4)
 
 	app := fiber.New()
+
 	app.Get("v1/api/barang/page", r.GetGoceng)
 	app.Get("v1/api/barang/:idBarang", r.GetBarang)
 	app.Get("v1/api/barang/cari/:cari", r.CariBarang)
