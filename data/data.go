@@ -18,6 +18,34 @@ type DataStok struct {
 	Stok uint64
 }
 
+type DataNama struct {
+	Nama string
+}
+
+type DataDeskripsi struct {
+	Deskripsi string
+}
+
+type DataTotalUlasan struct {
+	TotalUlasan uint64
+}
+
+type DataTotalTerjual struct {
+	TotalTerjual uint64
+}
+
+type DataPrice struct {
+	Price uint64
+}
+
+type DataKeyword struct {
+	Keyword []string
+}
+
+type DataRating struct {
+	Rating float64
+}
+
 type DataBarang struct {
 	Id           primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	IdToko       string             `json:"idToko,omitempty" bson:"idToko,omitempty"`

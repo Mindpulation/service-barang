@@ -27,6 +27,13 @@ func main() {
 	app.Post("v1/api/barang/insert", r.InsertBarang)
 	app.Put("v1/api/barang/:idBarang", r.UpdateBarang)
 	app.Put("v1/api/barang/stok/:idBarang", r.UpdateStokBarang)
+	app.Put("v1/api/barang/nama/:idBarang", r.UpdateNamaBarang)
+	app.Put("v1/api/barang/deskripsi/:idBarang", r.UpdateDeskripsiBarang)
+	app.Put("v1/api/barang/total_ulasan/:idBarang", r.UpdateTotalUlasanBarang)
+	app.Put("v1/api/barang/total_terjual/:idBarang", r.UpdateTotalTerjualBarang)
+	app.Put("v1/api/barang/price/:idBarang", r.UpdatePriceBarang)
+	app.Put("v1/api/barang/keyword/:idBarang", r.UpdateKeywordBarang)
+	app.Put("v1/api/barang/rating/:idBarang", r.UpdateRatingBarang)
 
 	app.Listen(port)
 }
