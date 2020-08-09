@@ -15,6 +15,6 @@ FROM alpine:latest
 WORKDIR /app/
 COPY --from=builder /go/src/github.com/mindpulation/Kotakjualan-Barang /app/Kotakjualan-Barang
 WORKDIR "/app/Kotakjualan-Barang"
-EXPOSE 6554
-ENTRYPOINT ./kjualan-barang
+EXPOSE 3000
+ENTRYPOINT ./brg
 
