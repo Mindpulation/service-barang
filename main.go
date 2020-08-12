@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-const port = 2020
+const port = 3000
 
 var r router.Router
 
