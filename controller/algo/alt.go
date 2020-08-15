@@ -20,10 +20,12 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 		qRate  int64
 		qMax   int64 = 5000
 		qCount int64 = 500
+		q      int64 = 20100
 	)
 
 	cn, cl, _ := m.MakeConnection()
-	q, _ := m.FindCount(cl)
+
+	//q, _ := m.FindCount(cl)
 
 	fmt.Println("QTY :", q)
 

@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,6 +25,7 @@ func (m MongoDB) MakeConnection() (*mongo.Client, *mongo.Collection, error) {
 	ct := m.MakeContext(5)
 	con, err := mongo.Connect(ct, options.Client().ApplyURI(m.Server))
 	if err != nil {
+		fmt.Println("Koneksi Error", err)
 		return nil, nil, err
 	}
 	col := con.Database(m.Database).Collection(m.Col)
