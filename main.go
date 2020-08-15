@@ -2,6 +2,7 @@ package main
 
 import (
 	"brg/router"
+	"fmt"
 	"runtime"
 
 	"github.com/gofiber/fiber"
@@ -21,10 +22,14 @@ func main() {
 
 	app := fiber.New()
 
+	fmt.Println("Service Barang [RUN] ", port)
+
 	app.Get("v1/api/barang/page", r.GetGoceng)
 	app.Get("v1/api/barang/:idBarang", r.GetBarang)
 	app.Get("v1/api/barang/cari/:cari", r.CariBarang)
+
 	app.Post("v1/api/barang/insert", r.InsertBarang)
+
 	app.Put("v1/api/barang/:idBarang", r.UpdateBarang)
 	app.Put("v1/api/barang/stok/:idBarang", r.UpdateStokBarang)
 	app.Put("v1/api/barang/nama/:idBarang", r.UpdateNamaBarang)
@@ -36,4 +41,5 @@ func main() {
 	app.Put("v1/api/barang/rating/:idBarang", r.UpdateRatingBarang)
 
 	app.Listen(port)
+
 }
