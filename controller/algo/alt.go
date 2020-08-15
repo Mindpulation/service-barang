@@ -32,7 +32,7 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 
 	qRate = qMax / qCount
 
-	ran int64 = 0
+	var ran int64 = 0
 
 	ss, ee := GetRange(ran, qli, en, qMax)
 
