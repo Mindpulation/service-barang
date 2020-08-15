@@ -5,7 +5,7 @@ import (
 	"context"
 	"sync"
 	"time"
-
+	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -32,7 +32,7 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 
 	qRate = qMax / qCount
 
-	ran := 0
+	ran int64 = 0
 
 	ss, ee := GetRange(ran, qli, en, qMax)
 
