@@ -51,7 +51,7 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 
 			val := a.AccurateSearch(obj.Nama, e, obj.TotalUlasan, obj.TotalTerjual, obj.Rating, obj.Keyword)
 
-			if val > 50 {
+			if val > 25 {
 				obj.FilterCari = float64(val)
 				dat = append(dat, obj)
 			}
