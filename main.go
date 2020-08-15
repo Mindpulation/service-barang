@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 )
 
@@ -21,6 +22,8 @@ func main() {
 	runtime.GOMAXPROCS(4)
 
 	app := fiber.New()
+
+	app.Use(cors.New())
 
 	fmt.Println("Service Barang [RUN] ", port)
 
