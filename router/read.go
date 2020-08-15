@@ -17,7 +17,7 @@ func (r Router) GetBarang(c *fiber.Ctx) {
 	var e data.ParamIdBarang
 
 	e.Id = objId
-	cr, _ := m.FindWithParam(col)
+	cr, _ := m.FindWithParam(col, e)
 
 	res := cl.ToArray(cr)
 	m.Disconnect(con)
