@@ -22,6 +22,6 @@ var m model.MongoDB
 var cl controller.Controller
 
 func init() {
-	m = model.MongoDB{"mongodb://103.27.206.22:27017/", "BarangDB", "Barang"}
+	m = model.MongoDB{"mongodb://mongo:27017/", "BarangDB", "Barang"}
 	cl = controller.Controller{}
 }
