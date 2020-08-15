@@ -22,7 +22,7 @@ func (m MongoDB) MakeContext(e int) context.Context {
 
 func (m MongoDB) MakeConnection() (*mongo.Client, *mongo.Collection, error) {
 	ct := m.MakeContext(5)
-	con, err := mongo.Connect(ct, options.Client().ApplyURI(m.Server).SetMinPoolSize(50))
+	con, err := mongo.Connect(ct, options.Client().ApplyURI(m.Server))
 	if err != nil {
 		return nil, nil, err
 	}

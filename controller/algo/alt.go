@@ -3,6 +3,7 @@ package algo
 import (
 	"brg/data"
 	"context"
+	"fmt"
 	"sync"
 	"time"
 	"fmt"
@@ -24,15 +25,17 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 	cn, cl, _ := m.MakeConnection()
 	q, _ := m.FindCount(cl)
 
-	fmt.Println(q)
+	fmt.Println("QTY :", q)
 
 	en = q % qMax
-
 	qli = q / qMax
-
 	qRate = qMax / qCount
 
-	var ran int64 = 0
+	fmt.Println("Qli :", qli)
+
+	ran := a.Random(qli, 0)
+
+	fmt.Println("Random :", ran)
 
 	ss, ee := GetRange(ran, qli, en, qMax)
 
