@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,8 +21,10 @@ func (m MongoDB) FindSkipAndLimit(col *mongo.Collection, skip int64, limit int64
 }
 
 func (m MongoDB) FindCount(col *mongo.Collection) (int64, error) {
-	ct := m.MakeContext(5)
+	ct := m.MakeContext(100)
 	res, err := col.CountDocuments(ct, bson.M{})
+	fmt.Println(res)
+	fmt.Println(err)
 	return res, err
 }
 

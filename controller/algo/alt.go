@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
-	"fmt"
+
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
