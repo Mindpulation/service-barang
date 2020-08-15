@@ -24,6 +24,8 @@ func (a Algo) CariBarang(e string) []data.DataFilter {
 	cn, cl, _ := m.MakeConnection()
 	q, _ := m.FindCount(cl)
 
+	fmt.Println(q)
+
 	en = q % qMax
 
 	qli = q / qMax
